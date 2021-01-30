@@ -13,25 +13,25 @@ void EPD_Clear(uint8_t Color)
 void EPD_DrawPixel(uint16_t x0, uint16_t y0, uint8_t color)
 {
 	if(x0 < 0 || x0 >= gstI80DevInfo.usPanelW || y0 < 0 || y0 >= gstI80DevInfo.usPanelH)
-		return ;	
-	
+		return ;
+
 	/*
-	ÏÔ´æ´¦Àí
+	ï¿½Ô´æ´¦ï¿½ï¿½
 	*/
 	gpFrameBuf[y0*gstI80DevInfo.usPanelW + x0] = color;
 }
 
 void EPD_DrawLine(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint8_t color)
 {
-	  uint32_t deltax = 0, deltay = 0, x = 0, y = 0, xinc1 = 0, xinc2 = 0, 
-	  yinc1 = 0, yinc2 = 0, den = 0, num = 0, num_add = 0, num_pixels = 0, 
+	  uint32_t deltax = 0, deltay = 0, x = 0, y = 0, xinc1 = 0, xinc2 = 0,
+	  yinc1 = 0, yinc2 = 0, den = 0, num = 0, num_add = 0, num_pixels = 0,
 	  curpixel = 0;
-	  
+
 	  deltax = ABS(x2 - x1);        /* The difference between the x's */
 	  deltay = ABS(y2 - y1);        /* The difference between the y's */
 	  x = x1;                       /* Start x off at the first pixel */
 	  y = y1;                       /* Start y off at the first pixel */
-	  
+
 	  if (x2 >= x1)                 /* The x-values are increasing */
 	  {
 		    xinc1 = 1;
@@ -42,7 +42,7 @@ void EPD_DrawLine(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint8_t color)
 		    xinc1 = -1;
 		    xinc2 = -1;
 	  }
-	  
+
 	  if (y2 >= y1)                 /* The y-values are increasing */
 	  {
 		    yinc1 = 1;
@@ -53,7 +53,7 @@ void EPD_DrawLine(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint8_t color)
 		    yinc1 = -1;
 		    yinc2 = -1;
 	  }
-	  
+
 	  if (deltax >= deltay)         /* There is at least one x-value for every y-value */
 	  {
 		    xinc1 = 0;              /* Don't change the x when numerator >= denominator */
@@ -72,7 +72,7 @@ void EPD_DrawLine(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint8_t color)
 		    num_add = deltax;
 		    num_pixels = deltay;    /* There are more y-values than x-values */
 	  }
-	  
+
 	  for (curpixel = 0; curpixel <= num_pixels; curpixel++)
 	  {
 		    EPD_DrawPixel(x, y, color);          /* Draw the current pixel */
@@ -99,34 +99,34 @@ void EPD_DrawRect(uint16_t Xpos,uint16_t Ypos,uint16_t Width,uint16_t Height,uin
 
 void EPD_DrawCircle(uint16_t Xpos,uint16_t Ypos,uint16_t Radius,uint8_t color)
 {
-	  int   decision;    	/* Decision Variable */ 
+	  int   decision;    	/* Decision Variable */
 	  uint32_t  current_x;   	/* Current X Value */
 	  uint32_t  current_y;   	/* Current Y Value */
-	  
+
 	  decision = 3 - (Radius << 1);
 	  current_x = 0;
 	  current_y = Radius;
-	  
+
 	  while (current_x <= current_y)
 	  {
 		    EPD_DrawPixel((Xpos + current_x), (Ypos - current_y), color);
-		    
+
 		    EPD_DrawPixel((Xpos - current_x), (Ypos - current_y), color);
-		    
+
 		    EPD_DrawPixel((Xpos + current_y), (Ypos - current_x), color);
-		    
+
 		    EPD_DrawPixel((Xpos - current_y), (Ypos - current_x), color);
-		    
+
 		    EPD_DrawPixel((Xpos + current_x), (Ypos + current_y), color);
-		    
+
 		    EPD_DrawPixel((Xpos - current_x), (Ypos + current_y), color);
-		    
+
 		    EPD_DrawPixel((Xpos + current_y), (Ypos + current_x), color);
-		    
+
 		    EPD_DrawPixel((Xpos - current_y), (Ypos + current_x), color);
-		    
+
 		    if (decision < 0)
-		    { 
+		    {
 				decision += (current_x << 2) + 6;
 		    }
 		    else
@@ -135,20 +135,20 @@ void EPD_DrawCircle(uint16_t Xpos,uint16_t Ypos,uint16_t Radius,uint8_t color)
 			      current_y--;
 		    }
 		    current_x++;
-	  } 
+	  }
 }
 
 void EPD_DrawPolygon(pPoint Points,uint16_t PointCount,uint8_t color)
 {
   uint16_t x = 0, y = 0;
-  
+
   if(PointCount < 2)
   {
     return;
   }
-  
+
   EPD_DrawLine(Points->X, Points->Y, (Points+PointCount-1)->X, (Points+PointCount-1)->Y,color);
-  
+
   while(--PointCount)
   {
     x = Points->X;
@@ -163,24 +163,24 @@ void EPD_DrawEllipse(uint16_t Xpos, uint16_t Ypos, uint16_t XRadius, uint16_t YR
 {
   int32_t x = 0, y = -YRadius, err = 2-2*XRadius, e2;
   float k = 0, rad1 = 0, rad2 = 0;
-  
+
   rad1 = XRadius;
   rad2 = YRadius;
-  
-  k = (float)(rad2/rad1);  
-  
-  do { 
+
+  k = (float)(rad2/rad1);
+
+  do {
     EPD_DrawPixel((Xpos-(uint16_t)(x/k)), (Ypos+y), color);
     EPD_DrawPixel((Xpos+(uint16_t)(x/k)), (Ypos+y), color);
     EPD_DrawPixel((Xpos+(uint16_t)(x/k)), (Ypos-y), color);
-    EPD_DrawPixel((Xpos-(uint16_t)(x/k)), (Ypos-y), color);      
-    
+    EPD_DrawPixel((Xpos-(uint16_t)(x/k)), (Ypos-y), color);
+
     e2 = err;
     if (e2 <= x) {
       err += ++x*2+1;
       if (-y == x && e2 <= y) e2 = 0;
     }
-    if (e2 > y) err += ++y*2+1;     
+    if (e2 > y) err += ++y*2+1;
   }
   while (y <= 0);
 }
@@ -192,35 +192,35 @@ void EPD_FillRect(uint16_t Xpos,uint16_t Ypos,uint16_t Width,uint16_t Height,uin
 	{
 		EPD_DrawLine(Xpos, Ypos+i,Xpos+Width,Ypos+i,color);
 	}
-  
+
 }
 
 void EPD_FillCircle(uint16_t Xpos,uint16_t Ypos,uint16_t Radius,uint8_t color)
 {
-  int32_t  decision;     /* Decision Variable */ 
+  int32_t  decision;     /* Decision Variable */
   uint32_t  current_x;   /* Current X Value */
   uint32_t  current_y;   /* Current Y Value */
-  
+
   decision = 3 - (Radius << 1);
-  
+
   current_x = 0;
   current_y = Radius;
 
   while (current_x <= current_y)
   {
-    if(current_y > 0) 
+    if(current_y > 0)
     {
 	EPD_DrawLine(Xpos - current_y, Ypos + current_x,Xpos +current_y,Ypos + current_x,color);
 	EPD_DrawLine(Xpos - current_y, Ypos - current_x,Xpos + current_y, Ypos - current_x,color);
     }
-    
-    if(current_x > 0) 
+
+    if(current_x > 0)
     {
 	EPD_DrawLine(Xpos - current_x, Ypos - current_y,Xpos+current_x,Ypos - current_y,color);
  	EPD_DrawLine(Xpos - current_x, Ypos + current_y,Xpos+current_x,Ypos + current_y,color);
     }
     if (decision < 0)
-    { 
+    {
       decision += (current_x << 2) + 6;
     }
     else
@@ -230,7 +230,7 @@ void EPD_FillCircle(uint16_t Xpos,uint16_t Ypos,uint16_t Radius,uint8_t color)
     }
     current_x++;
   }
-  
+
  	EPD_DrawCircle(Xpos, Ypos, Radius,color);
 }
 
@@ -262,22 +262,22 @@ void EPD_Text(uint16_t Xpos,uint16_t Ypos,uint8_t *str,uint8_t Color,uint8_t bkC
 	uint8_t TempChar;
 	do
 	{
-		TempChar = *str++;  
-		EPD_PutChar(Xpos, Ypos, TempChar, Color, bkColor);    
+		TempChar = *str++;
+		EPD_PutChar(Xpos, Ypos, TempChar, Color, bkColor);
 		if(Xpos < gstI80DevInfo.usPanelW - 8)
 		{
 			Xpos += 8;
-		} 
+		}
 		else if (Ypos < gstI80DevInfo.usPanelH - 16)
 		{
 			Xpos = 0;
 			Ypos += 16;
-		}   
+		}
 	else
 	{
 		Xpos = 0;
 		Ypos = 0;
-	}    
+	}
     }
     while (*str != 0);
 }
@@ -300,34 +300,41 @@ void EPD_DrawBitmap(uint16_t Xpos, uint16_t Ypos,uint16_t *bmp)
 			B = (temp&0x01F)<<3;
 			Gray = (R*299 + G*587 + B*114 + 500) / 1000;
 			EPD_DrawPixel(i, j,(uint8_t)Gray);
-		}	
-	}
-}
-
-void EPD_DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t High,const uint16_t* Matrix)
-{
-	uint16_t i,j,x,y;
-	uint16_t R,G,B,temp;
-	double Gray;
-	
-	for (y=0,j=Ypos;y<High;y++,j++)
-	{
- 		for (x=0,i=Xpos;x<Width;x++,i++)
-		{
-			temp = Matrix[y*550+x];
-			R = (temp >> 11)<<3;
-			G = ((temp&0x07E0) >> 5)<<2;
-			B = (temp&0x001F) <<3;
-			Gray = (R*299 + G*587 + B*114 + 500) / 1000;
-			EPD_DrawPixel(i, j, Gray);
 		}
 	}
 }
 
-//ÏÔÊ¾BMPÍ¼Æ¬Ïà¹ØµÄÈ«¾Ö±äÁ¿
-struct   fb_var_screeninfo vinfo; 	// ¼ÇÂ¼ÓÃ»§¿ÉÐÞ¸ÄµÄÏÔÊ¾¿ØÖÆÆ÷²ÎÊý
-uint32_t fbfd = 0;					// /dev/fb0 ÎÄ¼þÃèÊö·û
-uint8_t *fbp = 0;					// ÄÚ´æÓ³ÉäÖ¸Õë
+void EPD_DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t High,
+	const uint8_t* Matrix,uint8_t isSixteen)
+{
+	uint16_t i,j,x,y;
+	uint16_t R,G,B,temp;
+	double Gray;
+
+	for (y=0,i=Ypos;y<High;y++,i++)
+	{
+ 		for (x=0,j=Xpos;x<Width;x++,j++)
+		{
+			if (isSixteen==1){
+				temp = Matrix[y*Width+x];
+				R = (temp >> 11)<<3;
+				G = ((temp&0x07E0) >> 5)<<2;
+				B = (temp&0x001F) <<3;
+				Gray = (R*299 + G*587 + B*114 + 500) / 1000;
+				EPD_DrawPixel(j, i,(uint8_t)Gray);
+
+			} else {
+				EPD_DrawPixel(j, i,(uint8_t)Matrix[y*Width+x]);
+
+			}
+		}
+	}
+}
+
+//ï¿½ï¿½Ê¾BMPÍ¼Æ¬ï¿½ï¿½ï¿½Øµï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½
+//struct   fb_var_screeninfo vinfo; 	// ï¿½ï¿½Â¼ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Þ¸Äµï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint32_t fbfd = 0;					// /dev/fb0 ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint8_t *fbp = 0;					// ï¿½Ú´ï¿½Ó³ï¿½ï¿½Ö¸ï¿½ï¿½
 uint8_t *bmp_dst_buf = NULL;		// BMP Buffer
 uint8_t *bmp_src_buf = NULL;		// BMP Buffer
 uint32_t bmp_width, bmp_height;
@@ -345,13 +352,13 @@ static void Bitmap_format_Matrix(uint8_t *dst,uint8_t *src)
     uint8_t *p = psrc;
 	uint8_t temp;
 	uint32_t count;
-	
-	//ÓÉÓÚbmp´æ´¢ÊÇ´ÓºóÃæÍùÇ°Ãæ£¬ËùÒÔÐèÒªµ¹Ðò½øÐÐ×ª»»
+
+	//ï¿½ï¿½ï¿½ï¿½bmpï¿½æ´¢ï¿½Ç´Óºï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 	switch(bmp_BitCount)
 	{
 		case 1:
 			pdst += (bmp_width * bmp_height);
-			
+
 			for(i=0;i<bmp_height;i++)
 			{
 				pdst -= bmp_width;
@@ -359,7 +366,7 @@ static void Bitmap_format_Matrix(uint8_t *dst,uint8_t *src)
 				for (j=0;j<(bmp_width+7)/8;j++)
 				{
 					temp = p[j];
-					
+
 					for (k=0;k<8;k++)
 					{
 						pdst[0]= ((temp & (0x80>>k)) >> (7-k));
@@ -466,10 +473,10 @@ static void Bitmap_format_Matrix(uint8_t *dst,uint8_t *src)
 				}
 			}
 		break;
-		
+
 		default:
 		break;
-	}	
+	}
 }
 
 static void DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t High,const uint8_t* Matrix)
@@ -478,7 +485,7 @@ static void DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t Hig
 	uint8_t R,G,B;
 	uint8_t temp1,temp2;
 	double Gray;
-	
+
 	for (y=0,j=Ypos;y<High;y++,j++)
 	{
  		for (x=0,i=Xpos;x<Width;x++,i++)
@@ -492,7 +499,7 @@ static void DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t Hig
 					G = palette[Matrix[(y*Width+x)]].green;
 					B = palette[Matrix[(y*Width+x)]].blue;
 				break;
-				
+
 				case 16:
 					temp1 = Matrix[(y*Width+x)*2];
 					temp2 = Matrix[(y*Width+x)*2+1];
@@ -500,44 +507,44 @@ static void DrawMatrix(uint16_t Xpos, uint16_t Ypos,uint16_t Width, uint16_t Hig
 					G = (((temp1 & 0x03) << 3 ) | ((temp2&0xe0) >> 5))<<3;
 					B = (temp2 & 0x1f)<<3;
 				break;
-				
+
 				case 24:
 					R = Matrix[(y*Width+x)*3];
 					G = Matrix[(y*Width+x)*3+1];
 					B = Matrix[(y*Width+x)*3+2];
 				break;
-				
+
 				case 32:
 					R = Matrix[(y*Width+x)*4];
 					G = Matrix[(y*Width+x)*4+1];
 					B = Matrix[(y*Width+x)*4+2];
 				break;
-				
+
 				default:
 				break;
 			}
-		
+
 			Gray = (R*299 + G*587 + B*114 + 500) / 1000;
-			EPD_DrawPixel(i, j, Gray);	
+			EPD_DrawPixel(i, j, Gray);
 		}
 	}
 }
 
 uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 {
-	FILE *fp;//bmpÎÄ¼þÖ¸Õë
+	FILE *fp;//bmpï¿½Ä¼ï¿½Ö¸ï¿½ï¿½
 	BITMAPFILEHEADER FileHead;
 	BITMAPINFOHEADER InfoHead;
 	uint32_t total_length;
 	uint8_t *buf = NULL;
 	uint32_t ret = -1;
-	 
+
 	fp = fopen(path,"rb");
 	if (fp == NULL)
 	{
 		return(-1);
 	}
- 
+
 	ret = fread(&FileHead, sizeof(BITMAPFILEHEADER),1, fp);
 	if (ret != 1)
 	{
@@ -546,18 +553,18 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 		return(-2);
 	}
 
-	//¼ì²âÊÇ·ñÊÇbmpÍ¼Ïñ
-	if (FileHead.cfType != 0x4D42)//ÎÄ¼þÀàÐÍ£¬"BM"(0x4D42)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½bmpÍ¼ï¿½ï¿½
+	if (FileHead.cfType != 0x4D42)//ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Í£ï¿½"BM"(0x4D42)
 	{
 		printf("It's not a BMP file\n");
 		fclose(fp);
 		return(-3);
 	}
-	
+
 	printf("\n*****************************************\n");
 	printf("BMP_cfSize:%d \n", FileHead.cfSize);
  	printf("BMP_cfoffBits:%d \n", FileHead.cfoffBits);
-	
+
 	ret = fread((char *)&InfoHead, sizeof(BITMAPINFOHEADER),1, fp);
 	if (ret != 1)
 	{
@@ -565,7 +572,7 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 		fclose(fp);
 		return(-4);
 	}
-	
+
 	printf("BMP_ciSize:%d \n", InfoHead.ciSize);
  	printf("BMP_ciWidth:%d \n", InfoHead.ciWidth);
 	printf("BMP_ciHeight:%d \n", InfoHead.ciHeight);
@@ -578,41 +585,41 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 	printf("BMP_ciClrUsed:%x \n", InfoHead.ciClrUsed);
 	printf("BMP_ciClrImportant:%x \n", InfoHead.ciClrImportant);
  	printf("*****************************************\n\n");
-	
+
 	total_length = FileHead.cfSize-FileHead.cfoffBits;
 	bytesPerLine=((InfoHead.ciWidth*InfoHead.ciBitCount+31)>>5)<<2;
 	imageSize=bytesPerLine*InfoHead.ciHeight;
 	skip=(4-((InfoHead.ciWidth*InfoHead.ciBitCount)>>3))&3;
-	
+
 	printf("total_length:%d,%d\n", InfoHead.ciSizeImage,FileHead.cfSize-FileHead.cfoffBits);
 	printf("bytesPerLine = %d\n", bytesPerLine);
 	printf("imageSize = %d\n", imageSize);
 	printf("skip = %d\n", skip);
-	
+
     bmp_width = InfoHead.ciWidth;
     bmp_height = InfoHead.ciHeight;
 	bmp_BitCount = InfoHead.ciBitCount;
-	
+
     bmp_src_buf = (uint8_t*)calloc(1,total_length);
     if(bmp_src_buf == NULL){
         printf("Load > malloc bmp out of memory!\n");
         return -5;
     }
-	
+
 	bmp_dst_buf = (uint8_t*)calloc(1,total_length);
     if(bmp_dst_buf == NULL){
         printf("Load > malloc bmp out of memory!\n");
         return -5;
     }
 
-	 //Ìø×ªµ½Êý¾ÝÇø
+	 //ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     fseek(fp, FileHead.cfoffBits, SEEK_SET);
-	
-	//Ã¿ÐÐ×Ö½ÚÊý
+
+	//Ã¿ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
     buf = bmp_src_buf;
-    while ((ret = fread(buf,1,total_length,fp)) >= 0) 
+    while ((ret = fread(buf,1,total_length,fp)) >= 0)
 	{
-        if (ret == 0) 
+        if (ret == 0)
 		{
             usleep(100);
             continue;
@@ -622,19 +629,19 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
         if(total_length == 0)
             break;
     }
-	
-	//Ìø×ªµ½µ÷ÊÔ°å
+
+	//ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½
 	switch(bmp_BitCount)
-	{	
+	{
 		case 1:
 			fseek(fp, 54, SEEK_SET);
 			ret = fread(palette,1,4*2,fp);
-			if (ret != 8) 
+			if (ret != 8)
 			{
 				printf("Error: fread != 8\n");
 				return -5;
 			}
-		
+
 			bmp_dst_buf = (uint8_t*)calloc(1,InfoHead.ciWidth * InfoHead.ciHeight);
 			if(bmp_dst_buf == NULL)
 			{
@@ -642,16 +649,16 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 				return -5;
 			}
 		break;
-		
+
 		case 4:
 			fseek(fp, 54, SEEK_SET);
 			ret = fread(palette,1,4*16,fp);
-			if (ret != 64) 
+			if (ret != 64)
 			{
 				printf("Error: fread != 64\n");
 				return -5;
 			}
-		
+
 			bmp_dst_buf = (uint8_t*)calloc(1,InfoHead.ciWidth * InfoHead.ciHeight);
 			if(bmp_dst_buf == NULL)
 			{
@@ -659,19 +666,19 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 				return -5;
 			}
 		break;
-		
+
 		case 8:
 			fseek(fp, 54, SEEK_SET);
 
 			ret = fread(palette,1,4*256,fp);
 
-			if (ret != 1024) 
+			if (ret != 1024)
 			{
 				printf("Error: fread != 1024\n");
 				return -5;
 			}
 		break;
-		
+
 		default:
 		break;
 	}
@@ -682,9 +689,3 @@ uint8_t Show_bmp(uint32_t x, uint32_t y,char *path)
 	fclose(fp);
 	return(0);
 }
-
-
-
-
-
-
