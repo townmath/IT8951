@@ -1,4 +1,5 @@
-
+My fork is to make it talk nicely with a python program I wrote for a different epd so that the code would be compatible. 
+See https://github.com/townmath/eReader
 
 
 # 6inch e-Paper HAT
