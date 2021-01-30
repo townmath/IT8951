@@ -22,7 +22,7 @@ typedef struct IT8951LdImgInfo
     uint16_t usRotate; //Rotate mode
     uint32_t ulStartFBAddr; //Start address of source Frame buffer
     uint32_t ulImgBufBaseAddr;//Base address of target image buffer
-    
+
 }IT8951LdImgInfo;
 
 //structure prototype 2
@@ -133,6 +133,12 @@ void IT8951DisplayExample2(void);
 void IT8951Display1bppExample2(void);
 void IT8951DisplayExample3(void);
 void IT8951_GUI_Example(void);
+//jim add 1/28/21
+void IT8951_Matrix_Example(uint16_t Xpos, uint16_t Ypos,
+                           uint16_t Width, uint16_t High,
+                           const uint8_t* Matrix,uint8_t isSixteen);
+void IT8951DisplayClear();//uint8_t color);
+//end jim add
 void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path);
 
 uint16_t IT8951ReadReg(uint16_t usRegAddr);
@@ -143,8 +149,6 @@ void gpio_i80_16b_cmd_out(uint16_t usCmd);
 void GPIO_Configuration_Out(void);
 void GPIO_Configuration_In(void);
 
-void IT8951DisplayClear(void);
-
 //uint16_t IT8951ReadReg(uint16_t usRegAddr);
 void IT8951WriteReg(uint16_t usRegAddr,uint16_t usValue);
 
@@ -152,18 +156,3 @@ uint16_t IT8951GetVCOM(void);
 void IT8951SetVCOM(uint16_t vcom);
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
